@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador de portões</title>
+<meta name="description" content="Comparação cinemática de dois portões residenciais em Three.js.">
+<link rel="stylesheet" href="./estilo.css">
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <div class="brand"><span class="symbol" aria-hidden="true"><i></i><i></i><i></i></span> LABORATÓRIO DE CINEMÁTICA</div>
+    <span class="units" id="dimensions">4,50 m × 2,00 m</span>
+  </header>
+  <section class="intro">
+    <h1>Simulador de portões</h1>
+    <p>Compare a recolha em curva e em acordeão. Explore o movimento dos painéis e dos apoios inferiores.</p>
+  </section>
+  <div class="toolbar">
+    <div class="views" aria-label="Vista das simulações">
+      <button data-view="perspective" aria-pressed="true">Perspetiva</button>
+      <button data-view="plan" aria-pressed="false">Planta</button>
+      <button data-view="street" aria-pressed="false">Rua</button>
+      <button data-view="inside" aria-pressed="false">Interior</button>
+      <button data-view="mechanism" aria-pressed="false">Mecanismos</button>
+    </div>
+    <label class="speed">Velocidade <select id="speed"><option value=".5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+  </div>
+  <div class="cards" id="cards"></div>
+  <p id="load-error" role="alert" hidden></p>
+  <details class="parameters">
+    <summary>Parâmetros e camadas</summary>
+    <div class="parameter-body">
+      <div class="toggles">
+        <label><input type="checkbox" id="walls" checked> Muros e pilares</label>
+        <label><input type="checkbox" id="fill" checked> Revestimento</label>
+        <label><input type="checkbox" id="technical"> Eixos e envelopes</label>
+        <label><input type="checkbox" id="springs" checked> Molas de torção</label>
+        <label><input type="checkbox" id="sequence" checked> Sequência coordenada de A e B</label>
+        <label><input type="checkbox" id="obstacle"> Obstáculo de ensaio</label>
+      </div>
+      <div class="fields" id="fields"></div>
+      <button id="restore">Repor parâmetros</button>
+    </div>
+  </details>
+  <footer>Modelo cinemático conceptual. As folgas e os volumes são aproximações de estudo.</footer>
+</main>
+<template id="card">
+  <article class="card">
+    <header class="card-header">
+      <div><p class="category"></p><h2></h2></div><span class="status" aria-live="polite"></span>
+    </header>
+    <div class="viewport">
+      <div class="orientation" aria-hidden="true"><span>INTERIOR</span><span>ESQUERDA · DIREITA</span><span>RUA</span></div>
+    </div>
+    <div class="card-body">
+      <div class="legend"></div>
+      <div class="commands">
+        <button class="primary" data-action="open">Abrir</button>
+        <button data-action="close">Fechar</button>
+        <button data-action="pause">Parar</button>
+        <button data-action="resume">Retomar</button>
+      </div>
+      <div class="pedestrian" hidden>
+        <span>Folha pedonal B</span><button data-action="openB">Abrir B</button><button data-action="closeB">Fechar B</button>
+        <input class="swing-range" type="range" min="0" max="1000" value="0" aria-label="Posição da folha B">
+      </div>
+      <div class="position">
+        <label>Posição <output></output><input type="range" min="0" max="1000" value="0" aria-label="Posição no percurso"></label>
+        <button data-action="stepBack" aria-label="Recuar um passo">−</button>
+        <button data-action="step" aria-label="Avançar um passo">+</button>
+        <button data-action="reset">Reiniciar</button>
+      </div>
+      <div class="metrics"></div>
+      <p class="note" aria-live="polite"></p>
+      <details class="readout"><summary>Leituras cinemáticas</summary><div></div></details>
+    </div>
+  </article>
+</template>
+<script type="module">
+import('./simulador.mjs').catch(error=>{
+  document.querySelector('#load-error').textContent='Não foi possível iniciar a visualização 3D. Verifique a ligação e o suporte WebGL 2.';
+  document.querySelector('#load-error').hidden=false;
+  console.error(error);
+});
+</script>
+</body>
+</html>
