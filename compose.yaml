@@ -1,0 +1,21 @@
+name: portoes-riachos
+
+services:
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8081}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./estilo.css:/usr/share/nginx/html/estilo.css:ro
+      - ./modelo.mjs:/usr/share/nginx/html/modelo.mjs:ro
+      - ./simulador.mjs:/usr/share/nginx/html/simulador.mjs:ro
+      - ./visual.mjs:/usr/share/nginx/html/visual.mjs:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
